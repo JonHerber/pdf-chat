@@ -19,8 +19,8 @@ docker build -t chat .
 ```
 
 # Run the container
-Run the container and access it on localhost:
+Run the container and access it on [localhost](localhost:8501):
 
 ```bash
-docker run --rm chat
+docker run --rm -p 8501:8501 chat
 ```

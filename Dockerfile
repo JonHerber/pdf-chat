@@ -1,13 +1,22 @@
-# base image
 FROM python:3.10.12-slim
 
 WORKDIR /app-chat
 
-RUN mkdir pdf-files
+# Ensure the pdf-files directory exists
+RUN mkdir -p /app-chat/pdf-files
 
-COPY requirements.txt requirements.txt
-COPY pdf_rag.py pdf_rag.py
+# Copy necessary files
+COPY requirements.txt .
+COPY pdf_rag.py .
 
-RUN pip install -r requirements.txt
+# Expose Streamlit's default port
+EXPOSE 8501
 
-CMD ["streamlit", "run", "pdf_rag.py"]
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+# Install dependencies
+RUN pip install --no-cache-dir -U pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Run the Streamlit app
+CMD ["streamlit", "run", "pdf_rag.py", "--server.port=8501", "--server.address=0.0.0.0"]
